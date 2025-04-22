@@ -1,0 +1,7 @@
+@MyFirstApi_HostAddress = http://localhost:5054
+
+### Get all products
+GET {{MyFirstApi_HostAddress}}/api/products HTTP/1.1
+Accept: application/json
+
+###
