@@ -21,6 +21,9 @@ namespace MyWebApi.Controllers
         public async Task<ActionResult<List<T_sys_test>>> GetTestData()
         {
             var testData = await _testService.GetTestData();
+
+
+            
             return Ok(testData);
         }
     }
