@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using MyWebApi.Data;
-using MyWebApi.Models;
+using MyFirstApi.Data;
+using MyFirstApi.Models;
 
-namespace MyWebApi.Services
+namespace MyFirstApi.Services
 {
     public class T_sys_testService
     {
@@ -15,6 +15,7 @@ namespace MyWebApi.Services
             _context = context;
         }
 
+        // 获取测试数据
         public async Task<List<T_sys_test>> GetTestData()
         {
             return await _context.T_SYS_Test.ToListAsync();

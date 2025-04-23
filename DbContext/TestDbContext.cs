@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
-using MyWebApi.Models;
+using MyFirstApi.Models;
 
-namespace MyWebApi.Data
+namespace MyFirstApi.Data
 {
     public class TestDbContext : DbContext
     {

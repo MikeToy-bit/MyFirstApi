@@ -1,10 +1,11 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using MyWebApi.Models;
-using MyWebApi.Services;
+using MyFirstApi.Models;
+using MyFirstApi.Services;
 
-namespace MyWebApi.Controllers
+namespace MyFirstApi.Controllers
 {
     [ApiController]
     [Route("[controller]")]
@@ -18,10 +19,17 @@ namespace MyWebApi.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<T_sys_test>>> GetTestData()
+        public async Task<ApiResponse<List<T_sys_test>>> GetTestData()
         {
-            var testData = await _testService.GetTestData();
-            return Ok(testData);
+            try
+            {
+                var testData = await _testService.GetTestData();
+                return new ApiResponse<List<T_sys_test>>(testData);
+            }
+            catch (Exception ex)
+            {
+                return new ApiResponse<List<T_sys_test>>(500, ex.Message);
+            }
         }
     }
 }    

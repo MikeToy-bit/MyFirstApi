@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using Microsoft.EntityFrameworkCore;
 
-namespace MyWebApi.Models
+namespace MyFirstApi.Models
 {
     // 定义一个T_SYS_User类
     // 定义一个T_SYS_User类

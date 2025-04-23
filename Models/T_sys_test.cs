@@ -1,4 +1,4 @@
-namespace MyWebApi.Models
+namespace MyFirstApi.Models
 {
     public class T_sys_test
     {
