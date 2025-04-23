@@ -42,3 +42,4 @@
 /Users/toymike/Library/Mobile Documents/com~apple~CloudDocs/MyTest/WorkSpace/TestNet/MyFirstApi/bin/Debug/net8.0/Microsoft.Extensions.Options.dll
 /Users/toymike/Library/Mobile Documents/com~apple~CloudDocs/MyTest/WorkSpace/TestNet/MyFirstApi/bin/Debug/net8.0/MySqlConnector.dll
 /Users/toymike/Library/Mobile Documents/com~apple~CloudDocs/MyTest/WorkSpace/TestNet/MyFirstApi/bin/Debug/net8.0/Pomelo.EntityFrameworkCore.MySql.dll
+/Users/toymike/Library/Mobile Documents/com~apple~CloudDocs/MyTest/WorkSpace/TestNet/MyFirstApi/obj/Debug/net8.0/MyFirstApi.sourcelink.json

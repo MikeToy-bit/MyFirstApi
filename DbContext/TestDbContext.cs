@@ -10,5 +10,6 @@ namespace MyWebApi.Data
         }
 
         public DbSet<T_sys_test> T_SYS_Test { get; set; }
+        public DbSet<T_SYS_UserModel> T_sys_user { get; set; }
     }
 }    

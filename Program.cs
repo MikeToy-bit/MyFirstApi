@@ -22,6 +22,9 @@ builder.Services.AddDbContext<TestDbContext>(options =>
 // 注册 T_sys_testService
 builder.Services.AddScoped<T_sys_testService>();
 
+// 注册 T_sys_userInfoService
+builder.Services.AddScoped<T_sys_userInfoService>();
+
 
 
 var app = builder.Build();
