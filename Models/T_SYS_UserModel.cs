@@ -12,6 +12,8 @@ namespace MyFirstApi.Models
         public required  string EmpCode { get; set; }
         // 组织编号
         public required string EmpName { get; set; }
+        // 密码
+        public required string Password { get; set; }
         // 组织名称
         public required string OrgCode { get; set; }
         public required string OrgName { get; set; }
