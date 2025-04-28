@@ -8,22 +8,79 @@ using MyFirstApi.Models;
 
 namespace MyFirstApi.Services
 {
+    // 认证服务接口
     public interface IT_SYS_AuthService
     {
-        string GenerateToken(T_SYS_UserModel user);
+        T_SYS_TokenResponse GenerateTokens(T_SYS_UserModel user);
+        T_SYS_TokenResponse RefreshAccessToken(string refreshToken);
         bool ValidateToken(string token);
+        bool VerifyPassword(string inputPassword, string storedPasswordHash);
+        Task InvalidateToken(string token);
     }
 
+    // 认证服务实现
     public class T_SYS_AuthService : IT_SYS_AuthService
     {
+        // 依赖注入
         private readonly T_SYS_JwtSettings _jwtSettings;
-
-        public T_SYS_AuthService(IOptions<T_SYS_JwtSettings> jwtSettings)
+        private readonly IT_SYS_TokenBlacklistService _blacklistService;
+        
+        // 构造函数
+        public T_SYS_AuthService(
+            IOptions<T_SYS_JwtSettings> jwtSettings,
+            IT_SYS_TokenBlacklistService blacklistService)
         {
             _jwtSettings = jwtSettings.Value;
+            _blacklistService = blacklistService;
         }
 
-        public string GenerateToken(T_SYS_UserModel user)
+        public T_SYS_TokenResponse GenerateTokens(T_SYS_UserModel user)
+        {
+            var accessToken = GenerateAccessToken(user);
+            var refreshToken = GenerateRefreshToken();
+            
+            return new T_SYS_TokenResponse
+            {
+                AccessToken = accessToken,
+                RefreshToken = refreshToken,
+                AccessTokenExpiration = DateTime.UtcNow.AddMinutes(_jwtSettings.AccessTokenExpireMinutes),
+                RefreshTokenExpiration = DateTime.UtcNow.AddDays(_jwtSettings.RefreshTokenExpireDays)
+            };
+        }
+        // 刷新Access Token 
+        public T_SYS_TokenResponse RefreshAccessToken(string refreshToken)
+        {
+            // 验证Refresh Token
+            if (!ValidateToken(refreshToken))
+            {
+                throw new SecurityTokenException("无效的Refresh Token");
+            }
+
+            // 从Refresh Token中获取用户信息
+            var handler = new JwtSecurityTokenHandler();
+            var token = handler.ReadJwtToken(refreshToken);
+            var empCode = token.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+
+            if (string.IsNullOrEmpty(empCode))
+            {
+                throw new SecurityTokenException("无效的Refresh Token");
+            }
+
+            // 生成新的Access Token
+            var user = new T_SYS_UserModel { EmpCode = empCode, Password = string.Empty };
+            var newAccessToken = GenerateAccessToken(user);
+            var newRefreshToken = GenerateRefreshToken();
+
+            return new T_SYS_TokenResponse
+            {
+                AccessToken = newAccessToken,
+                RefreshToken = newRefreshToken,
+                AccessTokenExpiration = DateTime.UtcNow.AddMinutes(_jwtSettings.AccessTokenExpireMinutes),
+                RefreshTokenExpiration = DateTime.UtcNow.AddDays(_jwtSettings.RefreshTokenExpireDays)
+            };
+        }
+
+        private string GenerateAccessToken(T_SYS_UserModel user)
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.SecretKey));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
@@ -31,24 +88,52 @@ namespace MyFirstApi.Services
             var claims = new[]
             {
                 new Claim(ClaimTypes.NameIdentifier, user.EmpCode),
-                new Claim(ClaimTypes.Name, user.EmpName),
-                new Claim(ClaimTypes.Role, user.PostCode),
-                new Claim("OrgCode", user.OrgCode)
+                // new Claim(ClaimTypes.Name, user.EmpName),
+                // new Claim(ClaimTypes.Role, user.PostCode),
+                // new Claim("OrgCode", user.OrgCode)
             };
 
             var token = new JwtSecurityToken(
                 issuer: _jwtSettings.Issuer,
                 audience: _jwtSettings.Audience,
                 claims: claims,
-                expires: DateTime.Now.AddMinutes(_jwtSettings.ExpireMinutes),
+                expires: DateTime.UtcNow.AddMinutes(_jwtSettings.AccessTokenExpireMinutes),
                 signingCredentials: credentials
             );
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
+        private string GenerateRefreshToken()
+        {
+            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.SecretKey));
+            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+
+            var claims = new[]
+            {
+                new Claim(ClaimTypes.NameIdentifier, Guid.NewGuid().ToString()),
+                new Claim("tokenType", "refresh")
+            };
+
+            var token = new JwtSecurityToken(
+                issuer: _jwtSettings.Issuer,
+                audience: _jwtSettings.Audience,
+                claims: claims,
+                expires: DateTime.UtcNow.AddDays(_jwtSettings.RefreshTokenExpireDays),
+                signingCredentials: credentials
+            );
+
+            return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+
+        // 验证Token
         public bool ValidateToken(string token)
         {
+            if (_blacklistService.IsBlacklisted(token).Result)
+            {
+                return false;
+            }
+
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.UTF8.GetBytes(_jwtSettings.SecretKey);
 
@@ -72,6 +157,37 @@ namespace MyFirstApi.Services
             {
                 return false;
             }
+        }
+
+        // 验证密码哈希
+        public bool VerifyPassword(string inputPassword, string storedPasswordHash)
+        {
+            try
+            {
+                // 将输入的密码转换为字节数组
+                byte[] inputBytes = Encoding.UTF8.GetBytes(inputPassword);
+                
+                // 使用SHA256计算哈希值
+                using (SHA256 sha256 = SHA256.Create())
+                {
+                    byte[] hashBytes = sha256.ComputeHash(inputBytes);
+                    string inputHash = Convert.ToBase64String(hashBytes);
+                    
+                    // 比较哈希值
+                    return inputHash == storedPasswordHash;
+                }
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public async Task InvalidateToken(string token)
+        {
+            var handler = new JwtSecurityTokenHandler();
+            var jwtToken = handler.ReadJwtToken(token);
+            await _blacklistService.AddToBlacklist(token, jwtToken.ValidTo);
         }
     }
 } 

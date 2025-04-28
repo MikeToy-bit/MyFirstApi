@@ -8,11 +8,11 @@ namespace MyFirstApi.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class SysUserController : ControllerBase
+    public class T_SYS_UserController : ControllerBase
     {
-        private readonly T_sys_userInfoService _userService;
+        private readonly T_SYS_userInfoService _userService;
 
-        public SysUserController(T_sys_userInfoService userInfoService)
+        public T_SYS_UserController(T_SYS_userInfoService userInfoService)
         {
             _userService = userInfoService;
         }

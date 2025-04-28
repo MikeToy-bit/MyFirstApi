@@ -45,8 +45,21 @@ builder.Services.AddDbContext<TestDbContext>(options =>
 
 // 注册服务
 builder.Services.AddScoped<T_sys_testService>();
-builder.Services.AddScoped<T_sys_userInfoService>();
+builder.Services.AddScoped<T_SYS_userInfoService>();
 builder.Services.AddScoped<IT_SYS_AuthService, T_SYS_AuthService>();
+builder.Services.AddSingleton<IT_SYS_TokenBlacklistService, T_SYS_TokenBlacklistService>();
+
+// 添加CORS配置
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAllOrigins",
+        builder =>
+        {
+            builder.AllowAnyOrigin()
+                   .AllowAnyHeader()
+                   .AllowAnyMethod();
+        });
+});
 
 var app = builder.Build();
 
@@ -65,6 +78,9 @@ app.UseRouting();
 // 添加认证和授权中间件
 app.UseAuthentication();
 app.UseAuthorization();
+
+// 使用CORS中间件
+app.UseCors("AllowAllOrigins");
 
 app.MapControllers();
 
