@@ -24,14 +24,16 @@ namespace MyFirstApi.Services
         // 依赖注入
         private readonly T_SYS_JwtSettings _jwtSettings;
         private readonly IT_SYS_TokenBlacklistService _blacklistService;
-        
+        private readonly IT_SYS_UserRoleService _userRoleService;
         // 构造函数
         public T_SYS_AuthService(
             IOptions<T_SYS_JwtSettings> jwtSettings,
-            IT_SYS_TokenBlacklistService blacklistService)
+            IT_SYS_TokenBlacklistService blacklistService,
+            IT_SYS_UserRoleService userRoleService)
         {
             _jwtSettings = jwtSettings.Value;
             _blacklistService = blacklistService;
+            _userRoleService = userRoleService;
         }
 
         public T_SYS_TokenResponse GenerateTokens(T_SYS_UserModel user)
@@ -85,12 +87,20 @@ namespace MyFirstApi.Services
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.SecretKey));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
+            var roles = _userRoleService.GetRolesByEmpCode(user.EmpCode);
+
             var claims = new[]
             {
                 new Claim(ClaimTypes.NameIdentifier, user.EmpCode),
-                // new Claim(ClaimTypes.Name, user.EmpName),
-                // new Claim(ClaimTypes.Role, user.PostCode),
-                // new Claim("OrgCode", user.OrgCode)
+                new Claim("EmpName", user.EmpName??string.Empty),
+                new Claim("OrgCode", user.OrgCode??string.Empty),   
+                new Claim("OrgName", user.OrgName??string.Empty),
+                new Claim("PostCode", user.PostCode??string.Empty),
+                new Claim("PostName", user.EmpName??string.Empty),
+                new Claim("Sex", user.Sex.ToString()??string.Empty),
+                new Claim("Birthday", user.Birthday?.ToString("yyyy-MM-dd")??string.Empty),
+                new Claim("PhoneNumber", user.PhoneNumber??string.Empty),
+                new Claim("roles",string.Join(",",roles))
             };
 
             var token = new JwtSecurityToken(

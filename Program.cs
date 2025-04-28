@@ -48,6 +48,7 @@ builder.Services.AddScoped<T_sys_testService>();
 builder.Services.AddScoped<T_SYS_userInfoService>();
 builder.Services.AddScoped<IT_SYS_AuthService, T_SYS_AuthService>();
 builder.Services.AddSingleton<IT_SYS_TokenBlacklistService, T_SYS_TokenBlacklistService>();
+builder.Services.AddScoped<IT_SYS_RoleMenuService, T_SYS_RoleMenuService>();
 
 // 添加CORS配置
 builder.Services.AddCors(options =>

@@ -51,5 +51,6 @@ namespace MyFirstApi.Services
             return await _context.T_SYS_User.FindAsync(empCode);
         }   
 
+
     }
 }    
