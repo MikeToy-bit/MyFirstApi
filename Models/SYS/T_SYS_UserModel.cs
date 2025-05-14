@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 
 namespace MyFirstApi.Models
 {
@@ -45,5 +46,8 @@ namespace MyFirstApi.Models
         public DateTime? ModifyTime { get; set; }
         // 是否删除
         public bool? IsDeleted { get; set; }
+
+        // 导航属性
+        public virtual ICollection<T_SYS_UserRolesModel> UserRoles { get; set; } = new List<T_SYS_UserRolesModel>();
     }
 }    

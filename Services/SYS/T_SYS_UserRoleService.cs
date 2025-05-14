@@ -12,9 +12,9 @@ namespace MyFirstApi.Services
         // 获取所有用户角色
         Task<List<T_SYS_UserRolesModel>> GetUserRoles();
         // 根据角色获取用户角色
-            Task<List<T_SYS_UserRolesModel>> GetUserRolesByRoleId(string roleId);
+        Task<List<T_SYS_UserRolesModel>> GetUserRolesByRoleId(string roleId);
         // 根据用户获取用户角色
-        Task<List<string>> GetRolesByEmpCode(string empCode);
+        List<string> GetRolesByEmpCode(string empCode);
         // 添加用户角色
         Task<T_SYS_UserRolesModel> AddUserRole(T_SYS_UserRolesModel userRole);
         // 删除用户角色
@@ -46,11 +46,20 @@ namespace MyFirstApi.Services
                 .ToListAsync();
         }
         // 根据用户获取用户角色
-        public async Task<List<string>> GetRolesByEmpCode(string empCode)
+        public List<string> GetRolesByEmpCode(string empCode)
         {
-            return await _context.T_SYS_UserRoles
-                .Where(rm => rm.EmpCode == empCode).Select(m=>m.RoleId)
-                .ToListAsync();
+            try
+            {
+                var roles =  _context.T_SYS_UserRoles
+                    .Where(rm => rm.EmpCode .Equals(empCode))
+                    .Select(m => m.RoleId)
+                    .ToList();   
+                return roles;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
         // 添加用户角色 
         public async Task<T_SYS_UserRolesModel> AddUserRole(T_SYS_UserRolesModel userRole)

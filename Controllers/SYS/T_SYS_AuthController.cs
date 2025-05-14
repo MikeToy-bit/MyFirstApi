@@ -8,7 +8,7 @@ using MyFirstApi.Services;
 namespace MyFirstApi.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/auth")]
     public class T_SYS_AuthController : ControllerBase
     {
         private readonly IT_SYS_AuthService _authService;

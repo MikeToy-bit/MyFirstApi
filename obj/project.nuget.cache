@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "q9xGmy6cd4Y=",
+  "dgSpecHash": "gKB3jHZyy/0=",
   "success": true,
   "projectFilePath": "/Users/toymike/Library/Mobile Documents/com~apple~CloudDocs/MyTest/WorkSpace/TestNet/MyFirstApi/MyFirstApi.csproj",
   "expectedPackageFiles": [
@@ -29,6 +29,7 @@
     "/Users/toymike/.nuget/packages/microsoft.openapi/1.6.14/microsoft.openapi.1.6.14.nupkg.sha512",
     "/Users/toymike/.nuget/packages/mysqlconnector/2.3.5/mysqlconnector.2.3.5.nupkg.sha512",
     "/Users/toymike/.nuget/packages/pomelo.entityframeworkcore.mysql/8.0.0/pomelo.entityframeworkcore.mysql.8.0.0.nupkg.sha512",
+    "/Users/toymike/.nuget/packages/sixlabors.imagesharp/3.1.8/sixlabors.imagesharp.3.1.8.nupkg.sha512",
     "/Users/toymike/.nuget/packages/swashbuckle.aspnetcore/6.6.1/swashbuckle.aspnetcore.6.6.1.nupkg.sha512",
     "/Users/toymike/.nuget/packages/swashbuckle.aspnetcore.swagger/6.6.1/swashbuckle.aspnetcore.swagger.6.6.1.nupkg.sha512",
     "/Users/toymike/.nuget/packages/swashbuckle.aspnetcore.swaggergen/6.6.1/swashbuckle.aspnetcore.swaggergen.6.6.1.nupkg.sha512",
@@ -40,7 +41,7 @@
       "code": "NU1603",
       "level": "Warning",
       "warningLevel": 1,
-      "message": "MyFirstApi depends on Swashbuckle.AspNetCore (>= 6.5.1) but Swashbuckle.AspNetCore 6.5.1 was not found. An approximate best match of Swashbuckle.AspNetCore 6.6.1 was resolved.",
+      "message": "MyFirstApi 依赖于 Swashbuckle.AspNetCore (>= 6.5.1)，但找不到 Swashbuckle.AspNetCore 6.5.1。 已解决 Swashbuckle.AspNetCore 6.6.1 的近似最佳匹配。 ",
       "libraryId": "Swashbuckle.AspNetCore",
       "targetGraphs": [
         "net8.0"

@@ -12,7 +12,7 @@ namespace MyFirstApi.Services
         // 获取所有角色菜单
         Task<List<T_SYS_RoleMenusModel>> GetRoleMenus();
         // 根据角色获取角色菜单
-            Task<List<T_SYS_RoleMenusModel>> GetRoleMenusByRole(string roleId);
+        Task<List<T_SYS_RoleMenusModel>> GetRoleMenusByRole(string roleId);
         // 根据菜单获取角色菜单
         Task<List<T_SYS_RoleMenusModel>> GetRoleMenusByMenu(string menuId);
         // 添加角色菜单

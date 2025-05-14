@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 
 namespace MyFirstApi.Models
 {
@@ -21,6 +22,12 @@ namespace MyFirstApi.Models
         public string? MenuUrl { get; set; }
         // 父菜单编号
         public string? ParentMenuId { get; set; }
+        // 菜单排序
+        public int MenuSort { get; set; }
+
+        
+        // 子菜单集合
+        public List<T_SYS_RetUserMenusModel> Children { get; set; } = new List<T_SYS_RetUserMenusModel>();
     }
 
      public class T_SYS_MenusChildrenModel
@@ -40,5 +47,7 @@ namespace MyFirstApi.Models
         public string? MenuUrl { get; set; }
         // 父菜单编号
         public string? ParentMenuId { get; set; }
+        // 菜单排序
+        public int MenuSort { get; set; }
     }
 }    

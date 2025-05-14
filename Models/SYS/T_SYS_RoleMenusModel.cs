@@ -27,5 +27,9 @@ namespace MyFirstApi.Models
         public string? ModifyTime { get; set; }
         // 是否删除
         public bool? IsDeleted { get; set; }
+
+        // 导航属性
+        public virtual T_SYS_MenusModel Menu { get; set; } = null!;
+        public virtual T_SYS_RolesModel Role { get; set; } = null!;
     }
 }    

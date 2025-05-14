@@ -45,3 +45,4 @@
 /Users/toymike/Library/Mobile Documents/com~apple~CloudDocs/MyTest/WorkSpace/TestNet/MyFirstApi/obj/Debug/net8.0/MyFirstApi.pdb
 /Users/toymike/Library/Mobile Documents/com~apple~CloudDocs/MyTest/WorkSpace/TestNet/MyFirstApi/obj/Debug/net8.0/MyFirstApi.genruntimeconfig.cache
 /Users/toymike/Library/Mobile Documents/com~apple~CloudDocs/MyTest/WorkSpace/TestNet/MyFirstApi/obj/Debug/net8.0/ref/MyFirstApi.dll
+/Users/toymike/Library/Mobile Documents/com~apple~CloudDocs/MyTest/WorkSpace/TestNet/MyFirstApi/bin/Debug/net8.0/SixLabors.ImageSharp.dll

@@ -92,12 +92,13 @@ namespace MyFirstApi.Services
             var claims = new[]
             {
                 new Claim(ClaimTypes.NameIdentifier, user.EmpCode),
+                new Claim("EmpCode", user.EmpCode??string.Empty),
                 new Claim("EmpName", user.EmpName??string.Empty),
                 new Claim("OrgCode", user.OrgCode??string.Empty),   
                 new Claim("OrgName", user.OrgName??string.Empty),
                 new Claim("PostCode", user.PostCode??string.Empty),
                 new Claim("PostName", user.EmpName??string.Empty),
-                new Claim("Sex", user.Sex.ToString()??string.Empty),
+                new Claim("Sex", user.Sex.HasValue ? (user.Sex.Value ? "男" : "女") : string.Empty),
                 new Claim("Birthday", user.Birthday?.ToString("yyyy-MM-dd")??string.Empty),
                 new Claim("PhoneNumber", user.PhoneNumber??string.Empty),
                 new Claim("roles",string.Join(",",roles))
