@@ -46,5 +46,77 @@ namespace MyFirstApi.Models
             Data = data;
             Success = success;
         }
+
+        // 404 未找到资源
+        public static ApiResponse<T> NotFound(string message = "资源未找到")
+        {
+            return new ApiResponse<T>
+            {
+                StatusCode = 404,
+                Message = message,
+                Success = false,
+                Data = default
+            };
+        }
+
+        // 500 服务器内部错误
+        public static ApiResponse<T> Error(string message = "服务器内部错误")
+        {
+            return new ApiResponse<T>
+            {
+                StatusCode = 500,
+                Message = message,
+                Success = false,
+                Data = default
+            };
+        }
+
+        // 400 请求无效
+        public static ApiResponse<T> BadRequest(string message = "请求无效")
+        {
+            return new ApiResponse<T>
+            {
+                StatusCode = 400,
+                Message = message,
+                Success = false,
+                Data = default
+            };
+        }
+
+        // 403 无权限访问
+        public static ApiResponse<T> Forbidden(string message = "无权限访问")
+        {
+            return new ApiResponse<T>
+            {
+                StatusCode = 403,
+                Message = message,
+                Success = false,
+                Data = default
+            };
+        }
+
+        // 401 未授权
+        public static ApiResponse<T> Unauthorized(string message = "未授权")
+        {
+            return new ApiResponse<T>
+            {
+                StatusCode = 401,
+                Message = message,
+                Success = false,
+                Data = default
+            };
+        }
+
+        // 200 操作成功
+        public static ApiResponse<T> Ok(T data, string message = "操作成功")
+        {
+            return new ApiResponse<T>
+            {
+                StatusCode = 200,
+                Message = message,
+                Success = true,
+                Data = data
+            };
+        }
     }
 } 

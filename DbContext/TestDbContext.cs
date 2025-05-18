@@ -16,6 +16,7 @@ namespace MyFirstApi.Data
         public DbSet<T_SYS_RoleMenusModel> T_SYS_RoleMenus { get; set; }
         public DbSet<T_SYS_UserRolesModel> T_SYS_UserRoles { get; set; }
         public DbSet<T_SYS_FilesModel> T_SYS_Files { get; set; }
+        public DbSet<T_SYS_DictionaryModel> T_SYS_Dictionary { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

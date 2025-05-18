@@ -8,6 +8,7 @@ using System.Text;
 using MyFirstApi.Data;
 using MyFirstApi.Services;
 using MyFirstApi.Models;
+using MyFirstApi.Middleware;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -78,6 +79,7 @@ builder.Services.AddSingleton<IT_SYS_TokenBlacklistService, T_SYS_TokenBlacklist
 builder.Services.AddScoped<IT_SYS_RoleMenuService, T_SYS_RoleMenuService>();
 builder.Services.AddScoped<IT_SYS_UserRoleService, T_SYS_UserRoleService>();
 builder.Services.AddScoped<IT_SYS_FilesService, T_SYS_FilesService>();
+builder.Services.AddScoped<IT_SYS_DictionaryService, T_SYS_DictionaryService>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IT_SYS_UserContextService, T_SYS_UserContextService>();
 
@@ -97,6 +99,9 @@ var app = builder.Build();
 
 // 配置 Kestrel 服务器只监听 HTTP
 app.Urls.Add("http://localhost:7259");
+
+// 注册全局异常处理中间件
+app.UseGlobalExceptionHandler();
 
 // 检查是否是生产环境
 app.MapGet("/check-environment", (IWebHostEnvironment env) =>
