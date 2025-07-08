@@ -22,10 +22,14 @@ namespace MyFirstApi.Controllers
 
         [HttpPost("login")]
         [AllowAnonymous]
-        public async Task<IActionResult> Login([FromBody] T_SYS_UserModel user)
+        public async Task<IActionResult> Login([FromBody] T_SYS_UserLoginDTO user)
         {
             try
             {
+                if (string.IsNullOrEmpty(user.EmpCode) || string.IsNullOrEmpty(user.Password))
+                {
+                    return BadRequest(ApiResponse<object>.BadRequest("用户名或密码不能为空！"));
+                }
                 // 验证用户
                 var userInfo = await _userService.GetUserInfoByEmpCode(user.EmpCode);
                 if (userInfo == null)
@@ -33,8 +37,9 @@ namespace MyFirstApi.Controllers
                     return BadRequest(new ApiResponse<object>(400, "用户不存在"));
                 }
 
+                //验证密码是否正确
                 // 验证密码哈希
-                // if (!_authService.VerifyPassword(user.Password, userInfo.Password))
+                // if (!await _authService.VerifyPassword(user.EmpCode, user.Password))
                 // {
                 //     return BadRequest(new ApiResponse<object>(400, "密码错误"));
                 // }

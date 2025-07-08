@@ -20,7 +20,7 @@ builder.Services.Configure<T_SYS_JwtSettings>(builder.Configuration.GetSection("
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
-        var jwtSettings = builder.Configuration.GetSection("JwtSettings").Get<T_SYS_JwtSettings>() 
+        var jwtSettings = builder.Configuration.GetSection("JwtSettings").Get<T_SYS_JwtSettings>()
             ?? throw new InvalidOperationException("JwtSettings configuration is missing");
         options.TokenValidationParameters = new TokenValidationParameters
         {
@@ -41,7 +41,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // 配置数据库连接  
-var connectionString = builder.Configuration.GetConnectionString("MySqlConnection") + 
+var connectionString = builder.Configuration.GetConnectionString("MySqlConnection") +
     ";ConnectionTimeout=120;Pooling=true;MinPoolSize=5;MaxPoolSize=100";
 
 builder.Services.AddDbContext<TestDbContext>(options =>
@@ -52,21 +52,21 @@ builder.Services.AddDbContext<TestDbContext>(options =>
         mysqlOptions.MinBatchSize(1);
         mysqlOptions.MaxBatchSize(100);
         mysqlOptions.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
-        
+
         // 配置重试策略
         mysqlOptions.EnableRetryOnFailure(
             maxRetryCount: 5,
             maxRetryDelay: TimeSpan.FromSeconds(30),
             errorNumbersToAdd: null);
-            
+
         // 配置命令超时
         mysqlOptions.CommandTimeout(120);
     });
-    
+
     // 启用详细错误和敏感数据日志
     options.EnableDetailedErrors();
     options.EnableSensitiveDataLogging();
-    
+
     // 配置连接池
     options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
 });
@@ -82,6 +82,8 @@ builder.Services.AddScoped<IT_SYS_FilesService, T_SYS_FilesService>();
 builder.Services.AddScoped<IT_SYS_DictionaryService, T_SYS_DictionaryService>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IT_SYS_UserContextService, T_SYS_UserContextService>();
+builder.Services.AddScoped<IT_SYS_UserInfoService, T_SYS_userInfoService>();
+builder.Services.AddScoped<IT_SYS_Organization, T_SYS_Organization>();
 
 // 添加CORS配置
 builder.Services.AddCors(options =>

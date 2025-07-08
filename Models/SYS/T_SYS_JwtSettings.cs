@@ -15,7 +15,7 @@ namespace MyFirstApi.Models
         public string Audience { get; set; } = string.Empty;
         // Access Token过期时间（分钟）
         [Required]
-        public int AccessTokenExpireMinutes { get; set; }
+        public int AccessTokenExpireMinutes { get; set; } = 180;
         // Refresh Token过期时间（天）
         [Required]
         public int RefreshTokenExpireDays { get; set; }

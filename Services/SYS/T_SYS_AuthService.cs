@@ -11,10 +11,11 @@ namespace MyFirstApi.Services
     // 认证服务接口
     public interface IT_SYS_AuthService
     {
-        T_SYS_TokenResponse GenerateTokens(T_SYS_UserModel user);
+        T_SYS_TokenResponse GenerateTokens(UserResponseDTO user);
         T_SYS_TokenResponse RefreshAccessToken(string refreshToken);
         bool ValidateToken(string token);
-        bool VerifyPassword(string inputPassword, string storedPasswordHash);
+        Task<bool> VerifyPassword(string empCode, string password);
+        bool VerifyPasswordIsHash(string inputPassword, string storedPasswordHash);
         Task InvalidateToken(string token);
     }
 
@@ -25,22 +26,25 @@ namespace MyFirstApi.Services
         private readonly T_SYS_JwtSettings _jwtSettings;
         private readonly IT_SYS_TokenBlacklistService _blacklistService;
         private readonly IT_SYS_UserRoleService _userRoleService;
+        private readonly IT_SYS_UserInfoService _userService;
         // 构造函数
         public T_SYS_AuthService(
             IOptions<T_SYS_JwtSettings> jwtSettings,
             IT_SYS_TokenBlacklistService blacklistService,
-            IT_SYS_UserRoleService userRoleService)
+            IT_SYS_UserRoleService userRoleService,
+            IT_SYS_UserInfoService userService)
         {
             _jwtSettings = jwtSettings.Value;
             _blacklistService = blacklistService;
             _userRoleService = userRoleService;
+            _userService = userService;
         }
 
-        public T_SYS_TokenResponse GenerateTokens(T_SYS_UserModel user)
+        public T_SYS_TokenResponse GenerateTokens(UserResponseDTO user)
         {
             var accessToken = GenerateAccessToken(user);
             var refreshToken = GenerateRefreshToken();
-            
+
             return new T_SYS_TokenResponse
             {
                 AccessToken = accessToken,
@@ -69,7 +73,7 @@ namespace MyFirstApi.Services
             }
 
             // 生成新的Access Token
-            var user = new T_SYS_UserModel { EmpCode = empCode, Password = string.Empty };
+            var user = new UserResponseDTO { EmpCode = empCode };
             var newAccessToken = GenerateAccessToken(user);
             var newRefreshToken = GenerateRefreshToken();
 
@@ -82,7 +86,7 @@ namespace MyFirstApi.Services
             };
         }
 
-        private string GenerateAccessToken(T_SYS_UserModel user)
+        private string GenerateAccessToken(UserResponseDTO user)
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.SecretKey));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
@@ -94,7 +98,7 @@ namespace MyFirstApi.Services
                 new Claim(ClaimTypes.NameIdentifier, user.EmpCode),
                 new Claim("EmpCode", user.EmpCode??string.Empty),
                 new Claim("EmpName", user.EmpName??string.Empty),
-                new Claim("OrgCode", user.OrgCode??string.Empty),   
+                new Claim("OrgCode", user.OrgCode??string.Empty),
                 new Claim("OrgName", user.OrgName??string.Empty),
                 new Claim("PostCode", user.PostCode??string.Empty),
                 new Claim("PostName", user.EmpName??string.Empty),
@@ -170,20 +174,32 @@ namespace MyFirstApi.Services
             }
         }
 
+        // 验证密码是否正确
+
+        public async Task<bool> VerifyPassword(string empCode, string password)
+        {
+            var passWord = await _userService.GetPasswordByEmpCode(empCode);
+            if (string.IsNullOrEmpty(passWord))
+            {
+                return false;
+            }
+            return VerifyPasswordIsHash(password, passWord);
+        }
+
         // 验证密码哈希
-        public bool VerifyPassword(string inputPassword, string storedPasswordHash)
+        public bool VerifyPasswordIsHash(string inputPassword, string storedPasswordHash)
         {
             try
             {
                 // 将输入的密码转换为字节数组
                 byte[] inputBytes = Encoding.UTF8.GetBytes(inputPassword);
-                
+
                 // 使用SHA256计算哈希值
                 using (SHA256 sha256 = SHA256.Create())
                 {
                     byte[] hashBytes = sha256.ComputeHash(inputBytes);
                     string inputHash = Convert.ToBase64String(hashBytes);
-                    
+
                     // 比较哈希值
                     return inputHash == storedPasswordHash;
                 }
@@ -201,4 +217,4 @@ namespace MyFirstApi.Services
             await _blacklistService.AddToBlacklist(token, jwtToken.ValidTo);
         }
     }
-} 
+}

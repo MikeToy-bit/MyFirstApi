@@ -18,6 +18,8 @@ namespace MyFirstApi.Data
         public DbSet<T_SYS_FilesModel> T_SYS_Files { get; set; }
         public DbSet<T_SYS_DictionaryModel> T_SYS_Dictionary { get; set; }
 
+        public DbSet<T_SYS_OrganizationModel> T_SYS_Organization { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -27,19 +29,19 @@ namespace MyFirstApi.Data
                 .HasOne(ur => ur.User)
                 .WithMany(u => u.UserRoles)
                 .HasForeignKey(ur => ur.EmpCode);
-            
+
             // 配置角色与用户角色关系
             modelBuilder.Entity<T_SYS_UserRolesModel>()
                 .HasOne(ur => ur.Role)
                 .WithMany(r => r.UserRoles)
                 .HasForeignKey(ur => ur.RoleId);
-            
+
             // 配置角色与角色菜单关系
             modelBuilder.Entity<T_SYS_RoleMenusModel>()
                 .HasOne(rm => rm.Role)
                 .WithMany(r => r.RoleMenus)
                 .HasForeignKey(rm => rm.RoleId);
-            
+
             // 配置菜单与角色菜单关系
             modelBuilder.Entity<T_SYS_RoleMenusModel>()
                 .HasOne(rm => rm.Menu)
@@ -47,4 +49,4 @@ namespace MyFirstApi.Data
                 .HasForeignKey(rm => rm.MenuId);
         }
     }
-}    
+}
